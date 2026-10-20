@@ -16,7 +16,11 @@ Application: http://localhost:8101
 
 Example addon JSON: http://localhost:9101
 
-Login: **demo** / **HarnessDemo123!**
+Demo username: **`demo`**
+
+Demo password: **`HarnessDemo123!`**
+
+These are the default credentials. If you change `DEMO_PASSWORD` in `.env`, use that value instead.
 
 The first command creates a local `.env` with generated service secrets, waits for
 application readiness, seeds data, then starts the example addon. First startup may
@@ -46,6 +50,16 @@ After reset run `up` again. `.env` survives reset. To change ports, edit both
 copying this repo. Reset operates on that project, so never reuse a production name.
 
 ## Sample scenario
+
+### Workout data
+
+Log in as `demo`, open Workouts and select **Harness Full Body**. It contains three
+exercises, three sets of ten reps per exercise, a recovery day, and **six completed
+workout sessions (54 logged sets)**. Logged weights increase by 2.5 kg per session
+so addons can test workout history, training volume, and progression.
+
+Workout dates are 12, 10, 8, 5, 3 and 0 days before the fixture's end date, which
+is recorded in `runtime/credentials.json`. The latest workout is on that end date.
 
 A demo user, 14 daily body-weight readings, a full-body routine with three exercises and a recovery day, and six workouts totaling 54 logged sets. A nutrition plan includes three sample ingredients, breakfast/lunch/dinner meals and 42 diary entries. The upstream bundled exercise catalog is available without a remote sync. The bootstrap admin uses the demo password.
 

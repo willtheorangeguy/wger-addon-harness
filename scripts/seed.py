@@ -52,14 +52,14 @@ with transaction.atomic():
         entry, _ = SlotEntry.objects.get_or_create(slot=slot, order=1, defaults={'exercise': exercise})
         for model, value in [(SetsConfig, 3), (RepetitionsConfig, 10), (WeightConfig, 20+index*10)]:
             model.objects.update_or_create(slot_entry=entry, iteration=1, defaults={'value': value})
-        for offset in [12, 10, 8, 5, 3, 0]:
+        for session_no, offset in enumerate([12, 10, 8, 5, 3, 0]):
             stamp = datetime.combine(end-timedelta(days=offset), time(17), timezone.utc)
             for set_no in range(3):
                 log_id = uuid.uuid5(uuid.NAMESPACE_URL, f'harness:{user.pk}:{exercise.pk}:{stamp}:{set_no}')
                 WorkoutLog.objects.update_or_create(pk=log_id, defaults={
                     'user': user, 'routine': routine, 'slot_entry': entry,
                     'exercise': exercise, 'date': stamp+timedelta(minutes=set_no),
-                    'repetitions': 10, 'weight': 20+index*10})
+                    'repetitions': 10, 'weight': Decimal(20+index*10) + Decimal('2.5')*session_no})
     plan, _ = NutritionPlan.objects.update_or_create(user=user, description='Harness balanced meals',
         defaults={'start': end-timedelta(days=13), 'end': end+timedelta(days=42),
                   'has_goal_calories': True, 'goal_energy': 2200, 'goal_protein': 140})

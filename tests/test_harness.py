@@ -5,6 +5,7 @@ from pathlib import Path
 import time
 import unittest
 import xml.etree.ElementTree as ET
+from datetime import date, timedelta
 from urllib.request import urlopen
 from client import API, credentials, rows, snapshot
 
@@ -24,7 +25,41 @@ class HarnessTests(unittest.TestCase):
             checkins = rows(api.request('/api/measurements/check-in-measurements-range/' + creds['start_date'] + '/' + creds['end_date']))
             self.assertEqual(len(checkins), 14)
             walks = rows(api.request('/api/exercise-entries/by-date?selectedDate=' + creds['end_date']))
-            self.assertEqual(len(walks), 1)
+            self.assertEqual(sum(entry['name'] == 'Harness Brisk Walk' for entry in walks), 1)
+
+    def test_strength_workout_history(self):
+        api = API(credentials())
+        if os.environ['TARGET'] == 'wger':
+            entries = rows(api.request('/api/v2/workoutlog/?limit=100'))
+            self.assertEqual(len({entry['date'][:10] for entry in entries}), 6)
+            self.assertEqual(len(entries), 54)
+            self.assertTrue(all(float(entry['repetitions']) == 10 for entry in entries))
+            weights = {}
+            for entry in entries:
+                weights.setdefault(str(entry['exercise']), []).append((entry['date'], float(entry['weight'])))
+        else:
+            end = date.fromisoformat(credentials()['end_date'])
+            weights = {}
+            total_sets = 0
+            for offset in [12, 10, 8, 5, 3, 0]:
+                day = str(end-timedelta(days=offset))
+                entries = rows(api.request('/api/exercise-entries/by-date?selectedDate=' + day))
+                strength = [entry for entry in entries if entry['name'] in {
+                    'Harness Barbell Squat', 'Harness Bench Press', 'Harness Bent-over Row'}]
+                self.assertEqual(len(strength), 3)
+                for entry in strength:
+                    self.assertEqual(len(entry['sets']), 3)
+                    for logged_set in entry['sets']:
+                        self.assertEqual(logged_set['reps'], 10)
+                        self.assertIsNotNone(logged_set['completed_at'])
+                        weights.setdefault(entry['name'], []).append((day, float(logged_set['weight'])))
+                    total_sets += len(entry['sets'])
+            self.assertEqual(total_sets, 54)
+        self.assertEqual(len(weights), 3)
+        for history in weights.values():
+            history.sort()
+            self.assertGreater(history[0][1], 0)
+            self.assertAlmostEqual(history[-1][1] - history[0][1], 12.5)
 
     def test_example_addon_reads_real_data(self):
         with urlopen('http://example-addon:8080/', timeout=30) as response:
