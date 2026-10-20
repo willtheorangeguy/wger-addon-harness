@@ -1,0 +1,10 @@
+.env
+__pycache__/
+*.pyc
+runtime/*
+!runtime/.gitkeep
+reports/*
+!reports/.gitkeep
+compose.override.yaml
+addons/*
+!addons/README.md

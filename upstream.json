@@ -1,0 +1,8 @@
+{
+  "verified_on": "2026-10-20",
+  "source": "https://github.com/wger-project/wger",
+  "revision": "b690e9b11642f60a45c74678ab8b923358211b04",
+  "version": "2.8.0-dev.1",
+  "application_image": "wger/server@sha256:6dccc74fb23f185903895f430db11e0f714e43a35c9299df61bfc97b22e456cc",
+  "deployment_reference": "https://github.com/wger-project/docker/tree/c2e67393c04774184ee1e2b02181e35484c2ba5b"
+}

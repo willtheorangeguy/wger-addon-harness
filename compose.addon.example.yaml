@@ -1,0 +1,13 @@
+# Copy to compose.override.yaml. This replaces the working example addon.
+services:
+  example-addon:
+    image: my-fitness-addon:local
+    build:
+      context: ./addons/my-addon
+    command: !reset null
+    working_dir: !reset null
+    # Set an appropriate readiness check for your addon.
+    healthcheck:
+      disable: true
+    # Inherited: APP_URL, TARGET, PUBLIC_URL, /runtime mount, port 8080.
+    # Your addon must listen on 0.0.0.0:8080, or override ports too.
