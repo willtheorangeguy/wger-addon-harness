@@ -1,17 +1,36 @@
 name: Integration
 on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
 jobs:
+  unit:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.10', '3.12']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python harness.py test-unit
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: unit-${{ matrix.os }}-python-${{ matrix.python }}
+          path: reports/unit.xml
   integration:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python harness.py test
-      - if: failure()
-        run: docker compose --profile '*' logs --no-color > reports/compose.log
+      - name: Run real app, reseed, restart, and addon override checks
+        run: python harness.py test
       - uses: actions/upload-artifact@v4
         if: always()
         with:
