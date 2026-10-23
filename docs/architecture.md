@@ -36,7 +36,7 @@ The wger seed path uses Django ORM access directly inside the app container; the
 
 ### Tests and reports
 
-`tests/test_harness.py` discovers `test_*.py` with unittest, exercises authenticated reads, unauthenticated rejection and an isolated write/read/delete, then writes JUnit XML to the report mount.
+`tests/integration/run.py` discovers `test_*.py` under `tests/integration/` and uses `scripts/reporting.py` to write JUnit XML. The same reporter handles host unit tests. See [testing](testing.md) for the complete coverage matrix.
 
 ## Data flow
 

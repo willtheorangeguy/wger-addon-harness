@@ -30,4 +30,4 @@ The internal origin is `http://web:8000`. Use the `token` from the runtime crede
 
 The client sends `PUBLIC_URL` as its Origin header. Health readiness uses `/api/v2/version/` on web/frontend. Private source requests without credentials are expected to fail with HTTP 401 or 403 in the tests.
 
-For a live contract, inspect the pinned upstream application. The fixture's [client](https://github.com/willtheorangeguy/wger-addon-harness/blob/HEAD/scripts/client.py) and [tests](https://github.com/willtheorangeguy/wger-addon-harness/blob/HEAD/tests/test_harness.py) show the exact consumed routes and assertions.
+For a live contract, inspect the pinned upstream application. The fixture's [client](https://github.com/willtheorangeguy/wger-addon-harness/blob/HEAD/scripts/client.py) and [tests](https://github.com/willtheorangeguy/wger-addon-harness/blob/HEAD/tests/integration/test_platform.py) show the exact consumed routes and assertions.

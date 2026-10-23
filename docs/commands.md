@@ -20,7 +20,7 @@ python harness.py seed
 
 ## `test`
 
-Start/wait, seed, start addon, and run containerized unittest discovery.
+Start/wait, seed twice and verify stable fixtures, run integration tests, verify restart persistence, and build/check the supplied replacement addon. See [testing](testing.md).
 
 ```sh
 python harness.py test
@@ -74,3 +74,19 @@ python harness.py reset --yes
 | `--help` | flag | off | Print command/flag choices without initializing the sandbox. |
 
 Failed Compose commands or missing Docker exit 1. Invalid CLI arguments and `reset` without confirmation exit 2. Successful commands exit zero. A failed test container makes `test` fail; it does not automatically stop the application stack.
+
+## `test-unit`
+
+Run the host controller, HTTP-client and JUnit unit suites without Docker or credentials:
+
+```sh
+python harness.py test-unit
+```
+
+## `test-override`
+
+Start/seed twice, verify fixture stability, build/check the supplied addon, and restore your original addon:
+
+```sh
+python harness.py test-override
+```

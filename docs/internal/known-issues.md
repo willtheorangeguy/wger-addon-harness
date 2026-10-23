@@ -23,7 +23,7 @@ which also covers deliberate non-goals.
 ## 2. Default history lacks timestamped workout session objects
 
 **Severity:** Medium
-**Where:** `scripts/seed.py:46–62`; `tests/test_harness.py:test_strength_workout_history`
+**Where:** `scripts/seed.py:46–62`; `tests/integration/test_platform.py:test_strength_workout_history`
 
 **What:** The seeder creates WorkoutLog records for six dates but never creates WorkoutSession records or sets the logs’ session relation. The baseline assertion groups log dates rather than checking session objects.
 

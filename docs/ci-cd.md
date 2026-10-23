@@ -1,11 +1,24 @@
 # CI/CD
 
-`integration.yml` runs on pushes, pull requests and manual dispatch. It checks out the repository, sets up host Python 3.12 and invokes the same controller used locally:
+`integration.yml` runs on pushes, pull requests and manual dispatch. Host unit
+tests run on Ubuntu and Windows with Python 3.10 and 3.12:
+
+```sh
+python harness.py test-unit
+```
+
+A separate Ubuntu/Python 3.12 job starts the real Docker stack and verifies
+repeat seeding, integration behavior, restart persistence and addon replacement:
 
 ```sh
 python harness.py test
 ```
 
-On failure, it saves Compose logs to `reports/compose.log`. It uploads `reports/` as the `integration-reports` artifact regardless of success, then runs `python harness.py down` for cleanup. The job timeout is 25 minutes. Containers use pinned application image digests; there is no harness package/container release workflow.
+Each matrix job uploads `reports/unit.xml`. The Docker job uploads `reports/`
+as `integration-reports` on success or failure and always attempts `down`.
+Its timeout is 30 minutes. See [testing](testing.md) for coverage and report files.
+Application images are pinned by digest. There is no harness image release workflow.
 
-`docs-lint.yml` delegates Markdown, strict-build and link checks to the shared MkDocs workflow on documentation PRs. `docs.yml` delegates build/deployment to Pages on main/master docs pushes and manual dispatch. Pages uses Actions as its build source, separate from application fixture services.
+`docs-lint.yml` delegates Markdown, strict-build and link checks to the shared
+MkDocs workflow on documentation PRs. `docs.yml` builds/deploys Pages on documentation
+pushes and manual dispatch, independently of the Docker test services.

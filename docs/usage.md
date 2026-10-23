@@ -4,7 +4,9 @@
 | --- | --- |
 | `python harness.py up` | Start, wait, seed, and start example addon |
 | `python harness.py seed` | Reapply sample data without normal duplicate creation |
-| `python harness.py test` | Start/seed, run API integration tests and addon tests |
+| `python harness.py test-unit` | Run host unit tests without Docker |
+| `python harness.py test-override` | Verify reseeding and the supplied replacement addon |
+| `python harness.py test` | Verify reseeding, integration behavior, restart persistence, and addon replacement |
 | `python harness.py status` | Show all services |
 | `python harness.py logs` | Follow application logs |
 | `python harness.py down` | Stop; retain data |

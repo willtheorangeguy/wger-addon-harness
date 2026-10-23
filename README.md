@@ -37,6 +37,7 @@ First startup creates local secrets and seeds the demo account. See [getting sta
 ## Usage
 
 ```sh
+python harness.py test-unit
 python harness.py test
 python harness.py status
 python harness.py down
@@ -45,6 +46,14 @@ python harness.py down
 Application: `http://localhost:8101`. Example addon: `http://localhost:9101`.
 Demo username: **`demo`**; password: **`HarnessDemo123!`** unless changed in `.env`.
 `down` retains data; `reset --yes` deletes this sandbox's volumes and generated files. Keep the project name unique.
+
+## Testing
+
+Run `python harness.py test-unit` for 42 host tests without Docker, then
+`python harness.py test` for 23 integration tests against the real application.
+The full workflow also verifies repeat seeding, persistence after restart, and a
+built replacement addon. CI runs host tests on Windows/Linux and Python 3.10/3.12.
+See [test coverage and reports](docs/testing.md) for the shared three-project standard.
 
 ## Documentation
 

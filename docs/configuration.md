@@ -50,3 +50,13 @@ SEED_END_DATE=2026-10-20
 ```
 
 The [full environment template](https://github.com/willtheorangeguy/wger-addon-harness/blob/HEAD/.env.example) includes the remaining required values. Changing a project's name selects different volumes rather than migrating existing data.
+
+## Test controls
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `CHECK_EXAMPLE_ADDON` | boolean | `true` | Set `false` for a custom addon API; retains application and supplied-template checks. |
+
+`JWT_PRIVATE_KEY` and `JWT_PUBLIC_KEY` are generated as an RSA keypair for real
+headless login. `init` adds missing keys to existing sandboxes once and preserves
+their existing database/API credentials. Keep the generated values in `.env`.

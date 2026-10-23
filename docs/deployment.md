@@ -30,7 +30,7 @@ python harness.py reset --yes
 python harness.py up
 ```
 
-Reset removes regular files in `runtime/` and `reports/` except `.gitkeep`; nested directories remain. `.env` and the override survive. To choose a new fixture date, edit `SEED_END_DATE` before the next seed.
+Reset clears files and nested directories in `runtime/` and `reports/`, preserving top-level `.gitkeep` files. `.env` and the override survive. To choose a new fixture date, edit `SEED_END_DATE` before the next seed.
 
 ## Parallel harnesses
 

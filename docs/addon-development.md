@@ -3,7 +3,7 @@
 1. Clone your addon under `addons/my-addon`, or point a build context at another repo.
 2. Copy `compose.addon.example.yaml` to `compose.override.yaml` and customize it.
 3. Run `python harness.py up` to launch with the override.
-4. Add `tests/test_your_addon.py`; run `python harness.py test`.
+4. Add `tests/integration/test_your_addon.py`; run `python harness.py test`.
 
 The default addon is a working Python service in `scripts/addon.py`. It calls the
 real authenticated API and exposes a small JSON summary, demonstrating networking
@@ -46,8 +46,24 @@ services:
 
 ```
 
-The build context must exist before startup. `!reset` removes the sample command and working directory inherited from the base file. The example disables the inherited healthcheck; add a check appropriate to your addon. Listen on `0.0.0.0:8080` or change the inherited port mapping. The controller includes only `compose.override.yaml` automatically.
+The build context must exist before startup. `!reset` removes the sample command and working directory inherited from the base file. For a custom interface, replace the inherited healthcheck with one appropriate to your addon. Listen on `0.0.0.0:8080` or change the inherited port mapping. The controller includes only `compose.override.yaml` automatically.
 
 ## Credentials and tests
 
-Read the mounted credentials file and use the source's actual authentication scheme. Do not commit it or copy demo credentials into production. The default test suite expects the sample JSON contract. Replace that assertion when changing the addon interface, and add your tests under `tests/test_*.py` so the containerized unittest discovery includes them.
+Read the mounted credentials file and use the source's actual authentication scheme. Do not commit it or copy demo credentials into production. The default test suite expects the sample JSON contract. Replace that assertion when changing the addon interface, and add your tests under `tests/integration/test_*.py` so the containerized unittest discovery includes them.
+
+## Verify the supplied template
+
+The tracked `compose.addon.example.yaml` builds `addons/api-inspector` as a
+standalone image and retains the inherited `/health` readiness check. Try it
+unchanged before adapting the build context and healthcheck for your own addon.
+
+```sh
+python harness.py test-override
+```
+
+This verifies real API reads and a distinct implementation marker, then restores
+your original addon. The full `test` command includes it. Set
+`CHECK_EXAMPLE_ADDON=false` in `.env` when your own addon has a different API,
+and add assertions under `tests/integration/test_*.py`. This skips the sample
+interface checks while keeping application and supplied-template checks enabled.
