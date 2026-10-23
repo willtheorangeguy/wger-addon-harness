@@ -1,0 +1,37 @@
+INHERIT: .mkdocs-shared/shared/mkdocs.base.yml
+site_name: wger addon testing harness
+site_description: Run a seeded wger Docker sandbox with a real API, example addon
+  and containerized integration tests.
+site_author: willtheorangeguy
+site_url: https://williamvdg.me/wger-addon-harness/
+repo_url: https://github.com/willtheorangeguy/wger-addon-harness
+repo_name: willtheorangeguy/wger-addon-harness
+edit_uri: edit/main/docs/
+nav:
+- Home: index.md
+- Getting started: getting-started.md
+- Installation: installation.md
+- Configuration: configuration.md
+- Usage: usage.md
+- Commands: commands.md
+- Sample data: sample-data.md
+- Addon development: addon-development.md
+- Deployment: deployment.md
+- Architecture: architecture.md
+- API: api.md
+- Development: development.md
+- Testing: testing.md
+- CI/CD: ci-cd.md
+- FAQ: faq.md
+- Troubleshooting: troubleshooting.md
+- Roadmap: roadmap.md
+- About:
+  - MIT License: license.md
+  - Contributing: https://github.com/willtheorangeguy/.github/blob/main/CONTRIBUTING.md
+  - Code of conduct: https://github.com/willtheorangeguy/.github/blob/main/CODE_OF_CONDUCT.md
+  - Security: https://github.com/willtheorangeguy/.github/blob/main/SECURITY.md
+exclude_docs: 'docs.instructions.md
+
+  internal/
+
+  '
