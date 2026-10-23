@@ -62,6 +62,8 @@ class HarnessTests(unittest.TestCase):
             self.assertAlmostEqual(history[-1][1] - history[0][1], 12.5)
 
     def test_example_addon_reads_real_data(self):
+        if os.environ.get('CHECK_EXAMPLE_ADDON', 'true').lower() != 'true':
+            self.skipTest('Custom addon interface configured')
         with urlopen('http://example-addon:8080/', timeout=30) as response:
             self.assertEqual(response.status, 200)
             self.assertEqual(json.load(response)['platform'], os.environ['TARGET'])
@@ -90,30 +92,3 @@ class HarnessTests(unittest.TestCase):
                 self.assertEqual(float(api.request(path + '/2001-01-01')['weight']), 79.5)
             finally:
                 api.request(path + '/' + str(created['id']), method='DELETE')
-
-class ReportResult(unittest.TextTestResult):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.cases = []
-
-    def startTest(self, test):
-        self.cases.append(test.id())
-        super().startTest(test)
-
-
-if __name__ == '__main__':
-    suite = unittest.defaultTestLoader.discover('/harness/tests', pattern='test_*.py')
-    result = unittest.TextTestRunner(verbosity=2, resultclass=ReportResult).run(suite)
-    root = ET.Element('testsuite', name='addon-harness', tests=str(result.testsRun),
-                      failures=str(len(result.failures)), errors=str(len(result.errors)))
-    failures = {test.id(): traceback for test, traceback in result.failures}
-    errors = {test.id(): traceback for test, traceback in result.errors}
-    for test_id in result.cases:
-        module, _, name = test_id.rpartition('.')
-        case = ET.SubElement(root, 'testcase', classname=module, name=name)
-        if test_id in failures:
-            ET.SubElement(case, 'failure').text = failures[test_id]
-        if test_id in errors:
-            ET.SubElement(case, 'error').text = errors[test_id]
-    ET.ElementTree(root).write('/reports/junit.xml', encoding='unicode')
-    raise SystemExit(0 if result.wasSuccessful() else 1)

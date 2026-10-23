@@ -1,0 +1,22 @@
+{
+  "platform": "wger",
+  "services": [
+    "db",
+    "cache",
+    "web",
+    "worker",
+    "frontend"
+  ],
+  "restart_services": [
+    "web",
+    "worker",
+    "frontend"
+  ],
+  "build_services": [],
+  "seed_mode": "django",
+  "generated_dirs": [
+    "runtime",
+    "reports"
+  ],
+  "jwt_keypair": true
+}

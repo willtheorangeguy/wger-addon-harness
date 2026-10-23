@@ -1,13 +1,11 @@
-# Copy to compose.override.yaml. This replaces the working example addon.
+# The controller tests this template without overwriting compose.override.yaml.
 services:
   example-addon:
-    image: my-fitness-addon:local
+    image: ${COMPOSE_PROJECT_NAME}-api-inspector:local
     build:
-      context: ./addons/my-addon
+      context: ./addons/api-inspector
+      dockerfile: Dockerfile
     command: !reset null
     working_dir: !reset null
-    # Set an appropriate readiness check for your addon.
-    healthcheck:
-      disable: true
-    # Inherited: APP_URL, TARGET, PUBLIC_URL, /runtime mount, port 8080.
-    # Your addon must listen on 0.0.0.0:8080, or override ports too.
+    # Inherit APP_URL, TARGET, PUBLIC_URL, runtime credentials, and port 8080.
+    # This template exposes /health; adapt the readiness check for a different addon.

@@ -31,6 +31,8 @@ services:
       DJANGO_DB_HOST: db
       DJANGO_DB_PORT: '5432'
       SECRET_KEY: ${SECRET_KEY}
+      JWT_PRIVATE_KEY: ${JWT_PRIVATE_KEY}
+      JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
       SITE_URL: ${PUBLIC_URL}
       CSRF_TRUSTED_ORIGINS: ${PUBLIC_URL}
       TIME_ZONE: UTC
@@ -120,9 +122,11 @@ services:
     working_dir: /harness/scripts
     command: [python, addon.py]
     environment: &runner-env
+      FRONTEND_URL: http://frontend:80
       TARGET: wger
       APP_URL: http://web:8000
       PUBLIC_URL: ${PUBLIC_URL}
+      CHECK_EXAMPLE_ADDON: ${CHECK_EXAMPLE_ADDON:-true}
       PYTHONPATH: /harness/scripts
       PYTHONDONTWRITEBYTECODE: '1'
     volumes:
@@ -140,10 +144,10 @@ services:
     image: python:3.12.13-alpine
     profiles: [tools]
     environment: *runner-env
-    command: [python, /harness/tests/test_harness.py]
+    command: [python, /harness/tests/run.py]
     volumes:
       - ./scripts:/harness/scripts:ro
-      - ./tests:/harness/tests:ro
+      - ./tests/integration:/harness/tests:ro
       - ./runtime:/runtime:ro
       - ./reports:/reports
 

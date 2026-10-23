@@ -32,3 +32,7 @@ overrides/.icons/
 
 _docs_out/
 _site/
+
+# Tracked standalone addon used by the override integration gate.
+!addons/api-inspector/
+!addons/api-inspector/**
