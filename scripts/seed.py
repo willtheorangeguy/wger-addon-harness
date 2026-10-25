@@ -15,6 +15,9 @@ from wger.measurements.models.category import MetricType
 from wger.core.models import Language
 from wger.nutrition.models import Ingredient, NutritionPlan, Meal, MealItem, LogItem
 
+# State contains demo passwords and API tokens; keep it within the shared group.
+os.umask(0o007)
+
 state = Path('/runtime/credentials.json')
 old = json.loads(state.read_text()) if state.exists() else {}
 end = date.fromisoformat(old.get('end_date') or os.environ.get('SEED_END_DATE') or date.today().isoformat())
@@ -82,4 +85,5 @@ with transaction.atomic():
 state.write_text(json.dumps({'username': user.username, 'email': user.email,
     'password': os.environ['DEMO_PASSWORD'], 'token': token.key,
     'end_date': str(end), 'start_date': str(end-timedelta(days=13))}, indent=2))
+state.chmod(0o660)
 print('Seed complete: demo user, 14 weights, full body routine, 54 logged sets, nutrition plan and 42 diary entries.')

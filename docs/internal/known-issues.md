@@ -9,7 +9,9 @@ which also covers deliberate non-goals.
 
 **2 open:** 2 medium.
 
-## 1. Runtime directory is writable by every local user
+## 1. Runtime directory is writable by every local user — RESOLVED
+
+**Resolution:** Generated directories use mode 2770 and the host group, Compose helpers join that group, and credential files use mode 660 with a restrictive seed umask.
 
 **Severity:** Medium
 **Where:** `harness.py:init()`; `scripts/seed.py`

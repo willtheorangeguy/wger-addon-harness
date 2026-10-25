@@ -75,11 +75,20 @@ class ControllerTests(unittest.TestCase):
         self.assertRegex(content, r'DREEVE_API_KEY=drv_[0-9a-f]{64}')
         self.assertTrue(all((self.root / name).is_dir() for name in self.config['generated_dirs']))
 
+    @unittest.skipUnless(os.name == 'posix', 'POSIX mode checks')
+    def test_generated_directories_are_private_and_group_shared(self):
+        harness.init()
+        for name in self.config['generated_dirs']:
+            path = self.root / name
+            self.assertEqual(path.stat().st_mode & 0o7777, 0o2770)
+            self.assertEqual(path.stat().st_gid, os.getgid())
+        self.assertIn(f'HARNESS_GID={os.getgid()}', (self.root / '.env').read_text())
+
     def test_init_preserves_existing_env(self):
         path = self.root / '.env'
         path.write_text('CUSTOM_CREDENTIAL=preserve-me\n')
         harness.init()
-        self.assertEqual(path.read_text(), 'CUSTOM_CREDENTIAL=preserve-me\n')
+        self.assertTrue(path.read_text().startswith('CUSTOM_CREDENTIAL=preserve-me\n'))
 
     def test_init_rejects_unresolved_existing_placeholders(self):
         (self.root / '.env').write_text('SECRET_KEY=GENERATE_SECRET_KEY')
