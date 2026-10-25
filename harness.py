@@ -78,13 +78,21 @@ def init():
         values = make_jwt()
         with env_path.open('a', encoding='utf-8') as stream:
             stream.write('\n' + '\n'.join(k + '=' + v for k, v in values.items()) + '\n')
+    # Share generated state only with the host user's group. Container helpers
+    # receive this supplementary group through Compose, including non-root seeders.
+    gid = os.getgid() if hasattr(os, 'getgid') else 1000
+    if not re.search(r'^HARNESS_GID=', content, re.M):
+        with env_path.open('a', encoding='utf-8') as stream:
+            stream.write(f'\nHARNESS_GID={gid}\n')
     env_path.chmod(0o600)
     for name in config['generated_dirs']:
         path = ROOT / name
         if path.is_symlink() or path.resolve().parent != ROOT.resolve():
             raise RuntimeError('Refusing a redirected generated directory: ' + name)
         path.mkdir(exist_ok=True)
-        path.chmod(0o777)
+        if hasattr(os, 'chown'):
+            os.chown(path, -1, gid)
+        path.chmod(0o2770)
 
 def seed():
     compose('run', '--rm', '-T', 'seed')
