@@ -105,6 +105,7 @@ services:
       retries: 30
 
   seed:
+    group_add: ["${HARNESS_GID:-1000}"]
     image: *wger-image
     profiles: [tools]
     environment: *wger-env
@@ -117,6 +118,7 @@ services:
 
 
   example-addon:
+    group_add: ["${HARNESS_GID:-1000}"]
     image: python:3.12.13-alpine
     profiles: [addon]
     working_dir: /harness/scripts
@@ -141,6 +143,7 @@ services:
       retries: 12
 
   test:
+    group_add: ["${HARNESS_GID:-1000}"]
     image: python:3.12.13-alpine
     profiles: [tools]
     environment: *runner-env
